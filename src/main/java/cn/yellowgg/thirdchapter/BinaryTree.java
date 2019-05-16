@@ -202,6 +202,52 @@ public class BinaryTree {
         }
     }
 
+
+    /**
+     * 获取二叉树的深度
+     *
+     * @param root 二叉树根节点
+     * @return
+     */
+    public static int getDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        } else {
+            return Math.max(getDepth(root.leftChild),
+                    getDepth(root.rightChild)) + 1;
+        }
+    }
+
+    /**
+     * 使用递归方式层序遍历二叉树
+     * @param root
+     */
+    public static void levelOrderTraversalWithRecursive(TreeNode root){
+        //先获取二叉树深度
+        int depth = getDepth(root);
+        for (int i = 1; i <= depth ; i++) {
+            //输出每层的节点
+            printEveryLevel(root,i);
+        }
+    }
+
+    /**
+     * 输出所给层的节点
+     * @param root 二叉树根节点
+     * @param level 第几层
+     */
+    private static void printEveryLevel(TreeNode root, int level) {
+        if (root == null) {
+            return;
+        }
+        if (level == 1) {
+            System.out.println(root.data);
+        }else if (level > 1) {
+            printEveryLevel(root.leftChild,level - 1);
+            printEveryLevel(root.rightChild,level - 1);
+        }
+    }
+
     public static void main(String[] args) {
         LinkedList<Integer> inputList =
                 new LinkedList<Integer>(Arrays.asList(new Integer[]{3, 2, 9,
@@ -219,5 +265,9 @@ public class BinaryTree {
         inOrderTraveralWithStack(node);
         System.out.println("非递归后序遍历：");
         postOrderTraveralWithStack(node);
+        System.out.println("非递归层序遍历：");
+        levelOrderTraversal(node);
+        System.out.println("层序遍历：");
+        levelOrderTraversalWithRecursive(node);
     }
 }
