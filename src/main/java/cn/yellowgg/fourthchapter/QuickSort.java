@@ -1,6 +1,6 @@
 package cn.yellowgg.fourthchapter;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * @Author:黄广
@@ -19,6 +19,47 @@ public class QuickSort {
         //根据基准元素，分成两部分进行递归排序
         quickSort(arr, startIndex, pivotIndex - 1);
         quickSort(arr, pivotIndex + 1, endIndex);
+    }
+
+
+    /**
+     * 快排，非递归，用栈模拟
+     *
+     * @param arr
+     * @param startIndex
+     * @param endIndex
+     */
+    public static void quickSortByStack(int[] arr, int startIndex,
+                                        int endIndex) {
+        //用一个集合栈来代替递归的函数栈
+        Stack<Map<String, Integer>> quickSortStack = new Stack<Map<String, Integer>>();
+        //整个数列的起止下标，以哈希的形式入栈
+        Map rootParam = new HashMap();
+        rootParam.put("startIndex", startIndex);
+        rootParam.put("endIndex", endIndex);
+        quickSortStack.push(rootParam);
+
+        //循环结束条件：栈为空时
+        while (!quickSortStack.isEmpty()) {
+            //栈顶元素出栈，得到起止下标
+            Map<String, Integer> param = quickSortStack.pop();
+            //得到基准元素的位置
+            int pivotIndex = unilateralPartition(arr, param.get("startIndex"),
+                    param.get("endIndex"));
+            //根据基准元素分成两部分，把每一个部分的起止下标入栈
+            if (param.get("startIndex") < pivotIndex - 1) {
+                Map<String, Integer> leftParam = new HashMap<String, Integer>();
+                leftParam.put("startIndex", param.get("startIndex"));
+                leftParam.put("endIndex", pivotIndex - 1);
+                quickSortStack.push(leftParam);
+            }
+            if (pivotIndex + 1 < param.get("endIndex")) {
+                Map<String, Integer> rightParam = new HashMap<String, Integer>();
+                rightParam.put("startIndex", pivotIndex + 1);
+                rightParam.put("endIndex", param.get("endIndex"));
+                quickSortStack.push(rightParam);
+            }
+        }
     }
 
     /**
