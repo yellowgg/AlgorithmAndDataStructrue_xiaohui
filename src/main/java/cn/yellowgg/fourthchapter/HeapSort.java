@@ -10,14 +10,13 @@ import java.util.Arrays;
 public class HeapSort {
 
     /**
-     * “下沉”调整
-     * 本质是让所有非叶子节点依次下称下沉
+     * 构建最小堆
      *
-     * @param array       待调整的堆
-     * @param parentIndex 要“下沉”的父节点
-     * @param length      堆的有效大小
+     * @param array       无序数组
+     * @param parentIndex 父节点下标
+     * @param length      无须数组长度
      */
-    private static void downAdjust(int[] array, int parentIndex, int length) {
+    private static void buildMinHead(int[] array, int parentIndex, int length) {
         //temp 保存父节点的值，用于最后的赋值
         int temp = array[parentIndex];
         //获取左孩子节点
@@ -51,15 +50,43 @@ public class HeapSort {
     }
 
     /**
-     * 堆排序（升序）
+     * “上浮”调整
+     *
+     * @param array 待调整的堆
+     */
+    public static void buildMaxHead(int[] array, int parentIndex, int length) {
+        //temp 保存父节点的值，用于最后的赋值
+        int temp = array[parentIndex];
+        //获取左孩子节点
+        int childIndex = 2 * parentIndex + 1;
+        while (childIndex < length) {
+            if (childIndex + 1 < length && array[childIndex + 1] > array[childIndex]) {
+                //左孩子总比右孩子小1
+                childIndex++;
+            }
+            if (temp >= array[childIndex]) {
+                break;
+            }
+
+            array[parentIndex] = array[childIndex];
+            parentIndex = childIndex;
+            childIndex = 2 * childIndex + 1;
+        }
+        array[parentIndex] = temp;
+    }
+
+    /**
+     * 堆排序（降序）
+     * 根据堆排序的原理，是把堆顶元素放到最后，也就是数组的最后
+     * 此时要降序，所以数组的最后就是最小的
+     * 由此可以分析堆顶元素是最小的，所以堆排序降序需要构建最小堆
      *
      * @param array
      */
-    public static void heapSort(int[] array) {
-        //1.把无序数组构建成最大堆
-        for (int i = array.length / 2; i >= 0; i--) {
-            downAdjust(array, i, array.length - 1);
-
+    public static void heapSortDesc(int[] array) {
+        //1.把无序数组构建成最小堆
+        for (int i = (array.length - 2) / 2; i >= 0; i--) {
+            buildMinHead(array, i, array.length);
         }
         System.out.println(Arrays.toString(array));
         //2.循环删除堆顶元素，移动到集合尾部，调整堆产生新的堆顶
@@ -68,14 +95,45 @@ public class HeapSort {
             int temp = array[i];
             array[i] = array[0];
             array[0] = temp;
-            //“下沉”调整最大堆
-            downAdjust(array, 0, i);
+            //调整最小堆
+            buildMinHead(array, 0, i);
+        }
+    }
+
+    /**
+     * 堆排序（升序）
+     * 根据堆排序的原理，是把堆顶元素放到最后，也就是数组的最后
+     * 此时要升序，所以数组的最后就是最大的
+     * 由此可以分析堆顶元素是最大的，所以堆排序降序需要构建最大堆
+     *
+     * @param array
+     */
+    public static void heapSortAsce(int[] array) {
+        //1.把无序数组构建成最大堆
+        for (int i = (array.length - 2) / 2; i >= 0; i--) {
+            buildMaxHead(array, i, array.length);
+        }
+        System.out.println(Arrays.toString(array));
+        //2.循环删除堆顶元素，移动到集合尾部，调整堆产生新的堆顶
+        for (int i = array.length - 1; i > 0; i--) {
+            //最后一个元素和第一个元素进行交换
+            int temp = array[i];
+            array[i] = array[0];
+            array[0] = temp;
+            //调整最大堆
+            buildMaxHead(array, 0, i);
         }
     }
 
     public static void main(String[] args) {
-        int[] arr = new int[]{1,3,2,6,5,7,8,9,10,0};
-        heapSort(arr);
+        int[] arr = new int[]{50, 10, 90, 30, 70, 40, 80, 60, 20};
+        //降序
+        heapSortDesc(arr);
+        System.out.println(Arrays.toString(arr));
+
+        //升序
+        arr = new int[]{50, 10, 90, 30, 70, 40, 80, 60, 20};
+        heapSortAsce(arr);
         System.out.println(Arrays.toString(arr));
     }
 }
