@@ -73,6 +73,43 @@ public class ListRing {
         return 0;
     }
 
+    /**
+     * 获取入环节点
+     *
+     * @param head 链表头节点
+     */
+    public static Node getLinkNode(Node head) {
+        //先获取入环点
+        Node p1 = head;
+        Node p2 = head;
+        Node meetNode = null;
+        while (p2 != null && p2.next != null) {
+            //p1移动一个节点
+            p1 = p1.next;
+            //p2移动两个节点
+            p2 = p2.next.next;
+            //记录首次相遇点并终止循环
+            if (p1 == p2) {
+                meetNode = p1;
+                break;
+            }
+        }
+        //然后p1回到头节点，p2留在首次相遇点
+        p1 = head;
+        p2 = meetNode;
+        while (p2 != null && p2.next != null) {
+            //p1移动一个节点
+            p1 = p1.next;
+            //p2移动一个节点
+            p2 = p2.next;
+            //再次相遇就是入环节点
+            if (p1 == p2) {
+                return p1;
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         Node node1 = new Node(5);
         Node node2 = new Node(3);
@@ -91,6 +128,7 @@ public class ListRing {
         if (isCycle(node1)) {
             System.out.println("该链表是有环链表");
             System.out.println("环长为" + getCycleLength(node1));
+            System.out.println("入环节点为" + getLinkNode(node1).data);
         } else {
             System.out.println("该链表不是有环链表");
         }
