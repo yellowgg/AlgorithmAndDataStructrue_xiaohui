@@ -2,8 +2,7 @@ package cn.yellowgg.fifthchapter;
 
 /**
  * @Author:黄广
- * @Description: 面试算法：如何判定链表有环
- * 解题思路：追及问题
+ * @Description: 面试算法：有环链表
  * @Date: Created in 19-5-28 下午3:22
  */
 public class ListRing {
@@ -22,6 +21,7 @@ public class ListRing {
 
     /**
      * 判断是否有环
+     * 解题思路：追及问题
      *
      * @param head 链表头节点
      */
@@ -45,7 +45,7 @@ public class ListRing {
 
     /**
      * 获取有环链表的环长度
-     *
+     * 解体思路：相遇时开始统计前进步数，第二次相遇的前进步数就是环长
      * @param head 链表头节点
      */
     public static int getCycleLength(Node head) {
@@ -75,7 +75,7 @@ public class ListRing {
 
     /**
      * 获取入环节点
-     *
+     * 解体思路：根据推导出来的公式，p1在头节点，p2在首次相遇点，两者每次都前进一步，相遇点即是入环点
      * @param head 链表头节点
      */
     public static Node getLinkNode(Node head) {
