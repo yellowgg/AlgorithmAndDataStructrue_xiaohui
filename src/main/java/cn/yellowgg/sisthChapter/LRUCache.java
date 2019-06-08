@@ -21,6 +21,9 @@ public class LRUCache {
         hashMap = new HashMap<String, Node>();
     }
 
+    /**
+     * 读取节点，节点先刷新到哈希链表尾部再读取
+     */
     public String get(String key) {
         Node node = hashMap.get(key);
         if (node == null) {
@@ -30,24 +33,35 @@ public class LRUCache {
         return node.value;
     }
 
+    /**
+     * @param key
+     * @param value
+     */
     public void put(String key, String value) {
         Node node = hashMap.get(key);
+        //如果是新节点
         if (node == null) {
-            //如果key不存在，则插入key_value
+            //链表超长的话就移除头节点，即最近最少访问的节点
             if (hashMap.size() >= limit) {
                 String oldkey = removeNode(head);
                 hashMap.remove(oldkey);
             }
+            //没超长就直接加到尾部
             node = new Node(key, value);
             addNode(node);
             hashMap.put(key, node);
         } else {
-            //如果Key存在，则刷新key-value
+            //如果是老节点，更新值之后刷新节点的位置到尾部
             node.value = value;
             refreshNode(node);
         }
     }
 
+    /**
+     * 移除节点
+     *
+     * @param key
+     */
     public void romove(String key) {
         Node node = hashMap.get(key);
         removeNode(node);
@@ -55,7 +69,7 @@ public class LRUCache {
     }
 
     /**
-     * 刷新被访问的节点位置
+     * 刷新被访问的节点位置，总之就是把节点放到哈希链表最后
      *
      * @param node 被访问的节点
      */
@@ -64,9 +78,9 @@ public class LRUCache {
         if (node == end) {
             return;
         }
-        //移除节点
+        //从哈希链表中移除节点
         removeNode(node);
-        //重新插入节点
+        //重新在尾部插入节点
         addNode(node);
     }
 
